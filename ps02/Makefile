@@ -3,7 +3,7 @@ CFLAGS = -std=c17 -Wall -Wextra -Wpedantic -O0 -g
 
 .PHONY: all clean
 
-all: bin/01_hello bin/02_hello_wait bin/03_lifetime bin/04_fork_count bin/05_pipe
+all: bin/01_hello bin/02_hello_wait bin/03_lifetime bin/04_fork_count bin/05_pipe bin/06_pipe_sender_reads
 
 bin:
 	mkdir -p bin
@@ -22,6 +22,9 @@ bin/04_fork_count: bin src/04_fork_count.c
 
 bin/05_pipe: bin src/05_pipe.c
 	$(CC) $(CFLAGS) src/05_pipe.c -o $@
+
+bin/06_pipe_sender_reads: bin src/06_pipe_sender_reads.c
+	$(CC) $(CFLAGS) src/06_pipe_sender_reads.c -o $@
 
 clean:
 	rm -rf bin
