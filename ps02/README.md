@@ -7,33 +7,66 @@ Problem Session 2 covers process creation, process lifetime, `fork()`, `wait()`,
 - `Makefile` – repeatable build commands.
 - `notes/` – experiment observations and report material.
 
-## Publish this work
-
-Run these commands on the development machine from the repository root. The path is targeted so unrelated untracked directories are not added.
-
-```bash
-git add Y3/CPE333/ps02
-git commit -m "Add CPE333 process lab starter"
-git push origin main
-```
-
 ## Get it in Debian
 
-First time:
+Install the required tools:
 
 ```bash
 sudo apt update
 sudo apt install -y build-essential gdb git man-db manpages-dev procps psmisc strace
-git clone https://github.com/beambeambeam/my-cpe-lab.git
-cd my-cpe-lab/Y3/CPE333/ps02
+```
+
+Standalone clone – recommended:
+
+```bash
+git clone https://github.com/beambeambeam/CPE333.git
+cd CPE333/ps02
 ```
 
 Already cloned:
 
 ```bash
+cd ~/CPE333
+git pull --ff-only origin main
+cd ps02
+```
+
+Parent-repository clone:
+
+```bash
+git clone --recurse-submodules https://github.com/beambeambeam/my-cpe-lab.git
+cd my-cpe-lab/Y3/CPE333/ps02
+```
+
+If the parent repository was cloned without submodules:
+
+```bash
 cd ~/my-cpe-lab
 git pull --ff-only origin main
+git submodule update --init --recursive
 cd Y3/CPE333/ps02
+```
+
+## Publish changes
+
+CPE333 changes are committed and pushed from the standalone repository:
+
+```bash
+cd ~/CPE333
+git add ps02
+git commit -m "Update PS02 lab"
+git push origin main
+```
+
+The parent repository stores a fixed CPE333 commit. Update its pointer only when needed:
+
+```bash
+cd ~/my-cpe-lab/Y3/CPE333
+git pull --ff-only origin main
+cd ../..
+git add Y3/CPE333
+git commit -m "Update CPE333 submodule"
+git push origin main
 ```
 
 ## Build
