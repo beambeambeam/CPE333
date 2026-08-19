@@ -1,20 +1,82 @@
-# CPE333 PS02 – Debian setup
+# CPE333 PS02 – Build and run guide
 
 Problem Session 2 covers process creation, process lifetime, `fork()`, `wait()`, and pipes.
 
 - `problem-session.md` – assignment requirements.
 - `src/` – starter C programs.
-- `Makefile` – repeatable build commands.
+- `Makefile` – portable build commands.
 - `notes/` – experiment observations and report material.
 
-## Get it in Debian
+## Platform support
 
-Install the required tools:
+The programs require a C17 compiler and POSIX process APIs.
+
+Works on:
+
+- Linux – Debian, Ubuntu, Fedora, Arch, and others.
+- WSL2 Linux distributions.
+- macOS with Xcode Command Line Tools.
+- BSD systems with a C compiler and POSIX shell.
+
+Native Windows is not supported because it has no compatible `fork()` API. Use WSL2 or a Linux VM.
+
+Building and running does not require `sudo`. Use administrator privileges only to install packages.
+
+## Install prerequisites
+
+Install the core tools for the platform. Debugging and tracing tools are optional.
+
+### Debian, Ubuntu, and WSL2 Ubuntu
 
 ```bash
 sudo apt update
-sudo apt install -y build-essential gdb git man-db manpages-dev procps psmisc strace
+sudo apt install -y build-essential git
+sudo apt install -y gdb man-db manpages-dev procps psmisc strace
 ```
+
+### Fedora, Rocky, Alma, and RHEL-like systems
+
+```bash
+sudo dnf install -y gcc make git
+sudo dnf install -y gdb man-db man-pages procps-ng psmisc strace
+```
+
+If `sudo dnf` reports a package unavailable, install the first command and continue without that optional package.
+
+### Arch Linux
+
+```bash
+sudo pacman -S --needed base-devel git
+sudo pacman -S --needed gdb man-db man-pages procps-ng psmisc strace
+```
+
+### macOS
+
+Install Apple command-line tools:
+
+```bash
+xcode-select --install
+```
+
+This provides `clang`, `make`, `git`, `ps`, `sleep`, and manual pages. Homebrew is optional:
+
+```bash
+brew install git
+```
+
+`strace` is Linux-only. Skip it on macOS.
+
+### FreeBSD and other BSD systems
+
+Use the system C compiler and `make`, or install GNU Make if required:
+
+```bash
+sudo pkg install gmake git gdb psmisc
+```
+
+Use `gmake` if the system `make` rejects the Makefile.
+
+## Clone
 
 Standalone clone – recommended:
 
@@ -45,6 +107,36 @@ cd ~/my-cpe-lab
 git pull --ff-only origin main
 git submodule update --init --recursive
 cd Y3/CPE333/ps02
+```
+
+## Build
+
+```bash
+make
+```
+
+The Makefile uses the platform C compiler by default through `cc`. Override it when needed:
+
+```bash
+make CC=gcc
+make CC=clang
+```
+
+Compiler flags enable C17, warnings, and debugging symbols. Binaries are written to `bin/`, which is ignored by Git.
+
+If `make` is unavailable, install it with the platform package manager. The programs can also be compiled directly:
+
+```bash
+mkdir -p bin
+cc -std=c17 -Wall -Wextra -Wpedantic -O0 -g \
+   src/01_hello.c -o bin/01_hello
+```
+
+Clean build output:
+
+```bash
+make clean
+make
 ```
 
 ## Publish changes
@@ -96,11 +188,20 @@ make
 
 `03_lifetime child-first` keeps the parent alive while the child exits. Inspect the child during the parent sleep:
 
+Portable process inspection for a known PID:
+
 ```bash
-ps -u "$USER" -o pid,ppid,stat,cmd
+ps -p <pid> -o pid,ppid,stat,command
+```
+
+Linux-specific process tree commands:
+
+```bash
 ps -ef --forest
 pstree -p "$$"
 ```
+
+Some systems use different `ps` field names. If `command` is rejected, try `comm`.
 
 The child can appear as `<defunct>` until the parent calls `waitpid()`.
 
