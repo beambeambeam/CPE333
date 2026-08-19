@@ -5,6 +5,7 @@ Problem Session 2 covers process creation, process lifetime, `fork()`, `wait()`,
 - `problem-session.md` – assignment requirements.
 - `src/` – starter C programs.
 - `Makefile` – portable build commands.
+- `reports/report.tex` – report source with current code and TODO placeholders.
 - `notes/` – experiment observations and report material.
 
 ## Platform support
@@ -139,6 +140,20 @@ make clean
 make
 ```
 
+## Generate the PDF report
+
+`reports/report.tex` already contains the assignment structure, source-code listings, explanations, and placeholders for measured values and unfinished pipe variants.
+
+Use TeX Live, MacTeX, or another LaTeX distribution. Compile from the reports directory:
+
+```bash
+cd reports
+pdflatex report.tex
+pdflatex report.tex
+```
+
+Run LaTeX twice so the table of contents and references settle. Generated PDF and auxiliary files are ignored by Git.
+
 ## Publish changes
 
 CPE333 changes are committed and pushed from the standalone repository:
@@ -159,21 +174,6 @@ cd ../..
 git add Y3/CPE333
 git commit -m "Update CPE333 submodule"
 git push origin main
-```
-
-## Build
-
-```bash
-make
-```
-
-Compiler flags enable C17, POSIX declarations, warnings, and debugging symbols. Binaries are written to `bin/`, which is ignored by Git.
-
-Clean build output:
-
-```bash
-make clean
-make
 ```
 
 ## Run starter programs
