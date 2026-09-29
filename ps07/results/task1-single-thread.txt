@@ -1,0 +1,6 @@
+$ ./ps7 1 0  # Task 1: one cashier
+Example: festival wristband inventory
+Cashiers: 1; sales per cashier: 100000
+Yield between read and write: no
+Expected remaining if every sale is counted: 900000
+Observed remaining: 900000

@@ -1,0 +1,6 @@
+$ uname -a
+Linux piang-cachyos 7.2.6-1-cachyos #1 SMP PREEMPT_DYNAMIC Thu, 17 Sep 2026 10:26:35 +0000 x86_64 GNU/Linux
+$ gcc --version
+gcc (GCC) 16.2.1 20260810
+$ date
+Tue Sep 29 12:17:08 PM +07 2026
